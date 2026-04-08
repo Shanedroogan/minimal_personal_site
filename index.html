@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Silkscreen"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="hero-container">
+        <h1 class="hero">Shane Droogan</h1>
+    </div>
+    <div class="rotator-item" id="rotator-item"></div>
+    <div class="divider"></div>
+    <div class="hero-subtext">
+        <p>Write me: <a href="mailto:shane@droogan.com">shane@droogan.com</a></p>
+    </div>
+
+</body>
+<script>
+    (() => {
+        const streak = Math.floor((Date.now() - new Date('2026-01-01')) / (1000 * 60 * 60 * 24))
+        const streakArticle = streak.toString()[0] === '8' ? 'an' : 'a'
+        // ——— CONFIG ———
+        const words = [
+            // Nothing to see here; this is a very sophisticated API
+            '"...an engine of shareholder value creation"',
+            '"...a fairly good dancer"',
+            '"...great at moving lots of data very quickly"',
+            '"...cooks up a mean burger, this guy"',
+            '"...switches doors when presented with the Monty Hall problem"',
+            `...has ${streakArticle} ${Math.floor((Date.now() - new Date('2026-01-01')) / (1000 * 60 * 60 * 24))} day streak in the NYT crossword`,
+            '"...would pull the lever in the trolley problem"',
+            '"...cries at the most inexplicable times during movies"',
+            '"...has great qualities except he uses Vim"',
+            '"...is a  . . . really good . . . writer"',
+            '"...retired justin.tv streamer"',
+            '"...has contributed to The Rust Programming Language (Ch. 15 Smart Pointers)"',
+            '"...chews quietly"',
+            '"...thinks chess is a sport"',
+            '"...has an AWS certification"',
+            '"...what was I saying?"'
+        ];
+        // ———————————————
+        const selection = Date.now() % words.length
+        const item = document.getElementById('rotator-item');
+        const word = words[selection];
+        item.textContent = word;
+    })();
+</script>
+
+</html>
