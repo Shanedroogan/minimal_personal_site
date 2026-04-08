@@ -27,8 +27,11 @@
   .rotator-item {
     height: 3em;
     margin-bottom: 1em;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-wrap: pretty;
     line-height: 1.4em;
-    font-size: 1.4em;
+    font-size: clamp(0.5em, 3vw, 1.4em);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -86,6 +89,19 @@ p, li, blockquote {
   text-wrap: pretty;
   max-width: 65ch;
 }
+
+/* @media (max-width: 640px) {
+  h1 {
+    font-size: 4.5rem;
+  }
+  .rotator-item {
+    font-size: 3rem;
+  }
+
+  .hero-subtext {
+    font-size: 2rem;
+  }
+} */
 
 a {
   color: var(--accent);
