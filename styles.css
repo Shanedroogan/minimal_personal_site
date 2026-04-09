@@ -151,3 +151,13 @@ section {
     --accent: #85bda6;
   }
 }
+
+html {
+  background-color: #e8f0ed;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #072320;
+  }
+}
