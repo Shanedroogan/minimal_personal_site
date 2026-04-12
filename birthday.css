@@ -1,0 +1,78 @@
+.container {
+    text-align: center;
+    max-width: 480px;
+    padding: 2rem;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 2rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 2.5rem;
+}
+
+.puzzle-intro {
+    margin: 1em;
+}
+
+.input-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+input {
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid #3a3a44;
+    font-size: 1.4rem;
+    font-family: Lora;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    width: 200px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input:focus {
+    border-bottom-color: #8a8578;
+}
+
+.output-area {
+    margin-top: 2.5rem;
+    min-height: 1.6rem;
+}
+
+.result {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    line-height: 1.7;
+    color:crimson;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.result.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.result.correct {
+    color: #2d6249;
+}
+@media(prefers-color-scheme: dark) {
+    .result.correct {
+        color: #85bda6;
+    }
+    input {
+        color: #e4eeea;
+    }
+}

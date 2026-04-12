@@ -1,0 +1,111 @@
+<html>
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Silkscreen"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="birthday.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#072320" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#e8f0ed" media="(prefers-color-scheme: light)">
+    <title>🎂</title>
+</head>
+
+<body>
+    <!-- 2wetefzx -->
+    <div class="puzzle-intro">
+        Oh, hey dad. I got you a gift that had a link, but no matter where I pasted it it was too long.
+        I wish there was some kind of <b>"tiny url"</b> format so I could share it with you.
+    </div>
+    <div class="container">
+        <h3>While you're here, can you remind me your code for the garage? I forgot it.</h3>
+        <div class="input-wrap">
+            <input type="number" id="guess" autocomplete="off" autofocus>
+        </div>
+        <div class="output-area">
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+</body>
+<script>
+    const YOUR_SEARCH_PARAMS = '/2wetefzx';   // don't cheat please
+    const UNREMARKABLE_STRING = 'ho/ZsInOLl/kU+O5e2C+BRhodhkxPfwb0Qda4Mxe3qIDBremoA=='; // not a cipher value
+
+    const SALT = 'birthday-puzzle-salt-v1';  // Fixed salt, fine for this use case
+
+    async function deriveKey(number) {
+        const enc = new TextEncoder();
+        const keyMaterial = await crypto.subtle.importKey(
+            'raw', enc.encode(String(number)), 'PBKDF2', false, ['deriveKey']
+        );
+        return crypto.subtle.deriveKey(
+            { name: 'PBKDF2', salt: enc.encode(SALT), iterations: 100000, hash: 'SHA-256' },
+            keyMaterial,
+            { name: 'AES-GCM', length: 256 },
+            false,
+            ['encrypt', 'decrypt']
+        );
+    }
+
+    async function tryDecrypt(number) {
+        try {
+            const key = await deriveKey(number);
+            const raw = Uint8Array.from(atob(UNREMARKABLE_STRING), c => c.charCodeAt(0));
+            const iv = raw.slice(0, 12);
+            const data = raw.slice(12);
+            const decrypted = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv },
+                key,
+                data
+            );
+            const text = new TextDecoder().decode(decrypted);
+            return { success: true, text };
+        } catch {
+            // AES-GCM authentication failed — wrong number
+            return { success: false, text: generateNonsense(number) };
+        }
+    }
+
+    // Produce deterministic but garbled output for wrong guesses
+    function generateNonsense(number) {
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789=-_&';
+        let hash = 0;
+        const s = String(number) + SALT;
+        for (let i = 0; i < s.length; i++) {
+            hash = ((hash << 5) - hash + s.charCodeAt(i)) | 0;
+        }
+        const len = 10 + Math.abs(hash % 12);
+        let result = '';
+        for (let i = 0; i < len; i++) {
+            hash = ((hash << 5) - hash + i) | 0;
+            result += chars[Math.abs(hash) % chars.length];
+        }
+        return result;
+    }
+
+    // --- UI wiring ---
+    const input = document.getElementById('guess');
+    const resultEl = document.getElementById('result');
+    let debounce = null;
+
+    input.addEventListener('input', () => {
+        clearTimeout(debounce);
+        const val = input.value.trim();
+
+        if (!val) {
+            resultEl.classList.remove('visible', 'correct');
+            return;
+        }
+
+        debounce = setTimeout(async () => {
+            const { success, text } = await tryDecrypt(val);
+            resultEl.textContent = text;
+            resultEl.classList.toggle('correct', success);
+            resultEl.classList.add('visible');
+        }, 300);
+    });
+</script>
+
+</html>
